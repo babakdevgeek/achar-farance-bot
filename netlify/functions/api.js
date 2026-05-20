@@ -1,5 +1,5 @@
 import bot from "./parts/bot.js";
-
+import { setCommands } from "./parts/commands.js";
 let initialized = false;
 /** @type {import("@netlify/functions").Handler} */
 export async function handler(event) {
@@ -13,6 +13,8 @@ export async function handler(event) {
         }
 
         const update = JSON.parse(event.body || "{}");
+        await bot.init();
+        setCommands(bot);
 
         console.log("🔥 update received");
         console.log("handle update in api", bot.handleUpdate)
