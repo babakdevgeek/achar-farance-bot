@@ -1,4 +1,4 @@
-import bot from "../src/bot";
+import bot from "../../src/bot.js";
 
 /** @type {import("@netlify/functions").Handler} */
 export function handler(event) {
