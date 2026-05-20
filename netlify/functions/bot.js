@@ -1,5 +1,5 @@
 import { Bot } from "grammy";
-import { setCommands } from "./commands.js";
+import { setCommands } from "../../src/commands.js";
 
 const bot = new Bot(process.env.BOT_TOKEN);
 
