@@ -1,11 +1,18 @@
 import { Bot } from "grammy";
-import { setCommands } from "./commands.js";
 
 const bot = new Bot(process.env.BOT_TOKEN);
 
 
-setCommands(bot);
-console.log("check for handle update", bot.handleUpdate);
+bot.command("start", (ctx) => {
+    ctx.reply(`
+            به ربات آچار فرانسه خوش آمدید
+
+            فعلا تنها بخش تاریخ فعال است
+            `)
+})
+
+console.log("working");
+
 
 
 export default bot;
