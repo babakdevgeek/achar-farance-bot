@@ -1,4 +1,4 @@
-import bot from "./bot.js"
+import bot from "./parts/bot.js"
 
 
 /** @type {import("@netlify/functions").Handler} */
