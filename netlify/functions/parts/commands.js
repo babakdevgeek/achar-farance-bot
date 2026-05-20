@@ -1,4 +1,3 @@
-import bot from "./bot"
 
 /** 
  * @param {import("grammy").Bot} bot 
