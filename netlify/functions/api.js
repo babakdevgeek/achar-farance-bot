@@ -1,23 +1,60 @@
-import bot from "./parts/bot.js";
+import { Bot } from "grammy";
 
+/** =========================
+ *  BOT INIT (SINGLE SOURCE)
+ *  ========================= */
+const bot = new Bot(process.env.BOT_TOKEN);
 
-/** @type {import("@netlify/functions").Handler} */
-export async function handler(event) {
+// commands
+bot.command("start", (ctx) => {
+    ctx.reply(`
+👋 به ربات آچار فرانسه خوش آمدید
+
+📅 فعلاً فقط بخش تاریخ فعال است
+    `);
+});
+
+bot.command("date", (ctx) => {
+    const now = new Date();
+
+    const gregorian = now.toLocaleDateString("en-US");
+    const time = now.toLocaleTimeString("fa-IR");
+
+    ctx.reply(
+        `📅 میلادی: ${gregorian}
+🕒 ساعت: ${time}`
+    );
+});
+
+/** =========================
+ *  NETLIFY HANDLER
+ *  ========================= */
+export const handler = async (event) => {
 
     try {
+        console.log("🔥 update received");
+
         if (event.httpMethod !== "POST") {
             return {
-                statusCode: 405,
-                body: "Method not allowed",
+                statusCode: 200,
+                body: "OK (ignored non-POST)",
             };
         }
 
-        const update = JSON.parse(event.body || "{}");
+        if (!event.body) {
+            return {
+                statusCode: 200,
+                body: "OK (empty body)",
+            };
+        }
 
-        console.log("🔥 update received");
-        console.log("handle update in api", bot.handleUpdate)
-        if (!bot?.handleUpdate) {
-            throw new Error("Bot is not initialized correctly");
+        const update = JSON.parse(event.body);
+
+        console.log("📦 update:", update?.update_id);
+
+        // IMPORTANT: this must exist
+        if (!bot.handleUpdate) {
+            throw new Error("Bot not initialized correctly");
         }
 
         await bot.handleUpdate(update);
@@ -27,13 +64,13 @@ export async function handler(event) {
             body: "OK",
         };
 
-    } catch (error) {
+    } catch (err) {
+        console.error("❌ ERROR:", err);
 
-        console.error("🔥 ERROR:", error);
-
+        // NEVER break Telegram webhook
         return {
-            statusCode: 200, // IMPORTANT for Telegram
+            statusCode: 200,
             body: "error handled",
         };
     }
-}
+};
