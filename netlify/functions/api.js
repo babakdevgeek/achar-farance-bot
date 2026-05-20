@@ -1,8 +1,11 @@
-import bot from "../../src/bot.js";
+import bot from "../../src/bot.js"
+
 
 /** @type {import("@netlify/functions").Handler} */
 export async function handler(event) {
     if (event.httpMethod !== "POST") {
+        console.log("check handle update", bot?.handleUpdate);
+
         return {
             statusCode: 405,
             body: "Method not allowed"
