@@ -1,0 +1,12 @@
+{
+  "type": "module",
+  "scripts": {
+    "dev": "node src/dev.js"
+  },
+  "dependencies": {
+    "@netlify/functions": "^5.2.2",
+    "dotenv": "^17.4.2",
+    "grammy": "^1.40.0",
+    "jalaali-js": "^1.2.8"
+  }
+}
