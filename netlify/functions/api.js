@@ -51,6 +51,7 @@ export const handler = async (event) => {
         const update = JSON.parse(event.body);
 
         console.log("📦 update:", update?.update_id);
+        await bot.init()
 
         // IMPORTANT: this must exist
         if (!bot.handleUpdate) {
