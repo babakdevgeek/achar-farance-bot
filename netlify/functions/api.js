@@ -1,28 +1,38 @@
-import bot from "./parts/bot.js"
-
+import bot from "./parts/bot.js";
 
 /** @type {import("@netlify/functions").Handler} */
 export async function handler(event) {
-    if (event.httpMethod !== "POST") {
-        console.log("check handle update", bot?.handleUpdate);
+
+    try {
+        if (event.httpMethod !== "POST") {
+            return {
+                statusCode: 405,
+                body: "Method not allowed",
+            };
+        }
+
+        const update = JSON.parse(event.body || "{}");
+
+        console.log("🔥 update received");
+
+        if (!bot?.handleUpdate) {
+            throw new Error("Bot is not initialized correctly");
+        }
+
+        await bot.handleUpdate(update);
 
         return {
-            statusCode: 405,
-            body: "Method not allowed"
-        }
-    }
-    try {
-        const update = JSON.parse(event.body)
-        await bot.handleUpdate(update)
-        return {
             statusCode: 200,
-            body: "OK"
-        }
+            body: "OK",
+        };
+
     } catch (error) {
-        console.error("خطایی رخ داد", error)
+
+        console.error("🔥 ERROR:", error);
+
         return {
-            statusCode: 500,
-            body: error
-        }
+            statusCode: 200, // IMPORTANT for Telegram
+            body: "error handled",
+        };
     }
 }
