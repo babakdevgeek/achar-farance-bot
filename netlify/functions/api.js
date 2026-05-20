@@ -14,7 +14,7 @@ export async function handler(event) {
         const update = JSON.parse(event.body || "{}");
 
         console.log("🔥 update received");
-
+        console.log("handle update in api", bot.handleUpdate)
         if (!bot?.handleUpdate) {
             throw new Error("Bot is not initialized correctly");
         }
