@@ -13,10 +13,8 @@ export async function handler(event) {
         }
 
         const update = JSON.parse(event.body || "{}");
-        if (!initialized) {
-            await bot.init();
-            initialized = true;
-        }
+        await bot.init();
+
         console.log("🔥 update received");
         console.log("handle update in api", bot.handleUpdate)
         if (!bot?.handleUpdate) {
