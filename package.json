@@ -5,11 +5,11 @@
     "start": "node src/dist.js"
   },
   "dependencies": {
-    "express": "^5.2.1",
     "grammy": "^1.40.0",
     "moment-jalaali": "^0.10.4"
   },
   "devDependencies": {
-    "dotenv": "^17.4.2"
+    "dotenv": "^17.4.2",
+    "wrangler": "^4.95.0"
   }
 }

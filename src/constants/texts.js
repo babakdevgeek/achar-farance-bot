@@ -8,10 +8,14 @@ export class Text {
         switch (name) {
             case "start":
                 return `
- به ربات آچار فرانسه خوش آمدید <tg-emoji emoji-id="${Emoji
+ درود خوش آمدید <tg-emoji emoji-id="${Emoji
                         .getEmojiId("hello")}">${Emoji.getEmoji("hello")}</tg-emoji>
-ابزار های موجود رو میتونید از منوی پایین استفاده
- کنید<tg-emoji emoji-id="${Emoji.getEmojiId("down")}">${Emoji.getEmoji("down")}</tg-emoji>
+
+
+<blockquote>Of all things, i liked books best.</blockquote>
+<i> - NICOLA TESLA </i>${Emoji.getEmojTag("tesla")}${Emoji.getEmojTag("light-heart")} 
+
+منوی ابزار ${Emoji.getEmojTag("down")}
 `
             default:
                 return undefined;

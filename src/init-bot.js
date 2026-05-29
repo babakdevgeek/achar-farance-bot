@@ -1,11 +1,15 @@
 import { Bot } from "grammy";
-import "dotenv/config"
 import { HomeController } from "./controller/home-controller.js";
 import { DateTimeController } from "./controller/date-time-controller.js";
 
 
-export function initBot() {
-    const bot = new Bot(process.env.BOT_TOKEN);
+export function initBot(env) {
+    const token = env?.BOT_TOKEN || process.env.BOT_TOKEN;
+    console.log("TOKEN EXISTS:", !!token);
+    if (!token) {
+        throw new Error("BOT_TOKEN is not defined in environment variables.");
+    }
+    const bot = new Bot(token);
 
     bot.command("start", async (ctx) => {
         await HomeController.render(ctx);
