@@ -1,11 +1,15 @@
 {
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/bot.js"
+    "dev": "nodemon src/dev.js",
+    "start": "node src/dist.js"
   },
   "dependencies": {
-    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
     "grammy": "^1.40.0",
     "moment-jalaali": "^0.10.4"
+  },
+  "devDependencies": {
+    "dotenv": "^17.4.2"
   }
 }
