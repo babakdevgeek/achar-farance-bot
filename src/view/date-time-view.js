@@ -5,6 +5,7 @@ import { Emoji } from "../constants/emojies.js";
 export class DateTimeView {
     static text() {
         return `
+
 <i><b>ساعت</b></i> ${Emoji.getEmojTag("watch")}:                                                     <code>${DateModel.getDate().time}</code>
 
 <b>تاریخ و زمان فعلی</b>
@@ -14,6 +15,9 @@ export class DateTimeView {
 <i><b>میلادی</b></i> ${Emoji.getEmojTag("jesus")}:                                              <code>${DateModel.getDate().georgian}</code>
 
 <i><b>شمسی</b></i> ${Emoji.getEmojTag("islam")}:                                              <code>${DateModel.getDate().jalali}</code>
+
+                            <b>${DateModel.getDate().dayPersian} / ${DateModel.getDate().dayEnglish}</b>
+
 `
     }
 
