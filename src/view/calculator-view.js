@@ -21,18 +21,20 @@ export class CalculatorView {
     static error(errorType) {
 
         const messages = {
-            EMPTY: "❌ چیزی وارد نشده",
+            EMPTY: "برای مثال 3 * 6 یا (2 + 5) / 3 را وارد کنید.",
             INVALID: "❌ عبارت نامعتبر",
             SYNTAX: "❌ خطای سینتکس",
             NOT_FINITE: "❌ نتیجه نامحدود است",
             NOT_NUMBER: "❌ خروجی عددی نیست"
         };
 
+
+
         return [
             {
                 type: "article",
                 id: "calc_error",
-                title: "❌ خطا در محاسبه",
+                title: errorType === "EMPTY" ? "عبارت ریاضی خود را بنویسید" : "❌ خطا در محاسبه",
                 description: messages[errorType] || "خطای ناشناخته",
                 thumbnail_url: "https://img.icons8.com/?size=100&id=44000&format=png&color=000000",
                 input_message_content: {

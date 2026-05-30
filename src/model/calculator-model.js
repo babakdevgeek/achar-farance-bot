@@ -4,11 +4,11 @@ import { evaluate } from "mathjs";
 export class CalculatorModel {
 
     static ERROR = {
-        EMPTY: "لطفا یک عبارت ریاضی وارد کنید.",
-        INVALID: "عبارت ریاضی وارد شده معتبر نیست.",
-        SYNTAX: "خطا در تجزیه عبارت ریاضی. لطفا مطمئن شوید که عبارت صحیح است.",
-        NOT_FINITE: "نتیجه محاسبه نامتناهی یا غیرقابل محاسبه است.",
-        NOT_NUMBER: "نتیجه محاسبه یک عدد نیست."
+        EMPTY: "EMPTY",
+        INVALID: "INVALID",
+        SYNTAX: "SYNTAX",
+        NOT_FINITE: "NOT_FINITE",
+        NOT_NUMBER: "NOT_NUMBER"
     }
 
     static normalize(input) {
