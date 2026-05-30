@@ -1,27 +1,44 @@
+import { evaluate } from "mathjs";
 
 
 export class CalculatorModel {
-    constructor() {
-        this.mathematicalRegex = /^[0-9+\-*/().\s×÷]+$/;
+
+    static ERROR = {
+        EMPTY: "لطفا یک عبارت ریاضی وارد کنید.",
+        INVALID: "عبارت ریاضی وارد شده معتبر نیست.",
+        SYNTAX: "خطا در تجزیه عبارت ریاضی. لطفا مطمئن شوید که عبارت صحیح است.",
+        NOT_FINITE: "نتیجه محاسبه نامتناهی یا غیرقابل محاسبه است.",
+        NOT_NUMBER: "نتیجه محاسبه یک عدد نیست."
     }
 
-    static validate(query) {
-        return this.mathematicalRegex.test(query);
+    static normalize(input) {
+        return input
+            .replace(/×/g, "*")
+            .replace(/÷/g, "/")
+            .trim();
     }
 
-    static calculate(query) {
-        if (!this.validate(query)) return null;
+    static calculate(input) {
+        if (!input || !input.trim()) {
+            return { ok: false, error: this.ERROR.EMPTY };
+        }
+
+        const expression = this.normalize(input);
+
         try {
-            const cleanQuery = query.replace(/×/g, "*").replace(/÷/g, "/");
+            const result = evaluate(expression);
 
-            const result = new Function(`return ${cleanQuery}`)();
-
-            if (result !== undefined && !isNaN(result) && isFinite(result)) {
-                return result;
+            if (typeof result !== "number") {
+                return { ok: false, error: this.ERROR.NOT_NUMBER };
             }
-            return null;
+
+            if (!Number.isFinite(result)) {
+                return { ok: false, error: this.ERROR.NOT_FINITE };
+            }
+
+            return { ok: true, result, expression };
         } catch (error) {
-            return null;
+            return { ok: false, error: this.ERROR.SYNTAX };
         }
     }
 }

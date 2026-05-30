@@ -9,6 +9,7 @@ export class HomeView {
     }
     static keyboard() {
         const keyboard = new InlineKeyboard().text("تاریخ و زمان فعلی", "current_time").icon(Emoji.getEmojiId("calendar")).row()
+            .switchInlineCurrent("ماشین حساب").icon(Emoji.getEmojiId("calculator"));
         return keyboard;
     }
 }

@@ -20,6 +20,8 @@ export class Emoji {
                 return "5217777853185143415";
             case "light-heart":
                 return "6307312246162723113";
+            case "calculator":
+                return "5303214794336125778";
             default:
                 return undefined;
         }
@@ -45,6 +47,8 @@ export class Emoji {
                 return `<tg-emoji emoji-id="${this.getEmojiId("tesla")}">${this.getEmoji("tesla")}</tg-emoji>`;
             case "light-heart":
                 return `<tg-emoji emoji-id="${this.getEmojiId("light-heart")}">${this.getEmoji("light-heart")}</tg-emoji>`;
+            case "calculator":
+                return `<tg-emoji emoji-id="${this.getEmojiId("calculator")}">${this.getEmoji("calculator")}</tg-emoji>`;
             default:
                 return undefined;
         }
@@ -70,6 +74,8 @@ export class Emoji {
                 return "⚡";
             case "light-heart":
                 return "🤍";
+            case "calculator":
+                return "🧮";
             default:
                 return undefined;
         }

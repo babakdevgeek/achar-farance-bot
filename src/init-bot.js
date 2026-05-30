@@ -1,6 +1,7 @@
 import { Bot } from "grammy";
 import { HomeController } from "./controller/home-controller.js";
 import { DateTimeController } from "./controller/date-time-controller.js";
+import { CalculatorController } from "./controller/calculator-controller.js";
 
 
 export function initBot(env) {
@@ -21,6 +22,10 @@ export function initBot(env) {
 
     bot.callbackQuery("home", async (ctx) => {
         await HomeController.render(ctx);
+    })
+
+    bot.on("inline_query", async (ctx) => {
+        await CalculatorController.calculator(ctx);
     })
 
 

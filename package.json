@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "grammy": "^1.40.0",
+    "mathjs": "^15.2.0",
     "moment-jalaali": "^0.10.4"
   },
   "devDependencies": {
