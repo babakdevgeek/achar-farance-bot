@@ -3,7 +3,7 @@ import moment from "moment-jalaali";
 export class DateModel {
     static getDate() {
         const nowForTime = new Date().toLocaleString("fa-IR", { timeZone: "Asia/Tehran" });
-        const now = new Date();
+        const now = new Date().toLocaleString("en-us", { timeZone: "Asia/Tehran" });
         moment.loadPersian({ dialect: "persian-modern", usePersianDigits: true });
         return {
             dayPersian: moment(now).locale("fa").format("dddd"),
