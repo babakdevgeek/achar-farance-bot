@@ -8,8 +8,8 @@ export class HomeView {
         return Text.getText("start");
     }
     static keyboard() {
-        const keyboard = new InlineKeyboard().text("تاریخ و زمان فعلی", "current_time").icon(Emoji.getEmojiId("calendar")).row()
-            .switchInlineCurrent("ماشین حساب").icon(Emoji.getEmojiId("calculator"));
+        const keyboard = new InlineKeyboard().text("تاریخ و زمان فعلی", "current_time").icon(Emoji.getEmojiId("calendar"))
+            .switchInlineCurrent("ماشین حساب").icon(Emoji.getEmojiId("calculator")).row().text("ارز دیجیتال").url("https://vanila-js-crypto-dashboard.bobandcomputers.workers.dev/");
         return keyboard;
     }
 }
