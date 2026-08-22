@@ -9,7 +9,7 @@ export class HomeView {
     }
     static keyboard() {
         const keyboard = new InlineKeyboard().text("تاریخ و زمان فعلی", "current_time").icon(Emoji.getEmojiId("calendar"))
-            .switchInlineCurrent("ماشین حساب").icon(Emoji.getEmojiId("calculator")).row().url("ارزهای دیجیتال", "https://vanila-js-crypto-dashboard.pages.dev/")
+            .switchInlineCurrent("ماشین حساب").icon(Emoji.getEmojiId("calculator")).row().url("ارزهای دیجیتال", "https://vanila-js-crypto-dashboard.bobandcomputers.workers.dev")
             .row().url("دانلود فیلم و سریال", "https://fastmovie.bobandcomputers.workers.dev/");
         return keyboard;
     }
