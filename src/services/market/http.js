@@ -54,28 +54,3 @@ export async function fetchJson(url, { timeoutMs = DEFAULT_TIMEOUT_MS, retries =
     }
     throw lastError;
 }
-
-/** Fetch JSON, returning null instead of throwing (for optional/fallback sources). */
-export async function fetchJsonSafe(url, options) {
-    try {
-        return await fetchJson(url, options);
-    } catch (error) {
-        console.error(`[market] request failed: ${url}:`, error.message);
-        return null;
-    }
-}
-
-/** Fetch a raw text body (HTML pages), null on failure. */
-export async function fetchTextSafe(url, options) {
-    try {
-        const res = await fetch(url, {
-            headers: { "User-Agent": USER_AGENT, ...options?.headers },
-            signal: AbortSignal.timeout(options?.timeoutMs ?? DEFAULT_TIMEOUT_MS),
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status} from ${url}`);
-        return await res.text();
-    } catch (error) {
-        console.error(`[market] request failed: ${url}:`, error.message);
-        return null;
-    }
-}

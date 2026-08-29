@@ -6,7 +6,7 @@ import { isWithinBounds, PRICE_BOUNDS, tehranTime } from "./validate.js";
  * Bitcoin price in Toman.
  * Primary: TGJU — BTC is quoted in USD there, so multiply by the TGJU USD
  * rate (both from the same snapshot, so they are consistent).
- * Fallback: Tabdeal BTC/IRT order book — reachable from Iran.
+ * Fallback: Tabdeal BTC/IRT order book.
  */
 export async function fetchBitcoinPrice() {
     try {

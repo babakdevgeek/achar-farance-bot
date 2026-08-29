@@ -27,7 +27,7 @@ export async function fetchUsdPrice() {
         console.error("[market] tgju usd failed:", tgjuError.message);
     }
 
-    // Fallback: Tabdeal USDT/IRT (Tether rate proxy) — reachable from Iran.
+    // Fallback: Tabdeal USDT/IRT (Tether rate proxy).
     const price = await fetchTabdealPrice("usd");
     return { ...price, unit: "تومان" };
 }

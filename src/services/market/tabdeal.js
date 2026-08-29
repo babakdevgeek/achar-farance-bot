@@ -8,6 +8,11 @@ import { getEndpoint } from "./config.js";
  * One JSON payload with every market, keyed as currencies[BASE][QUOTE]:
  *   { price, high_24, low_24, change_percent_24 }
  *
+ * Verified to work when called from a deployed Cloudflare Worker (no special
+ * headers needed — the earlier belief that it is only reachable from inside
+ * Iran is wrong; the real deployment blocker was an unsupported fetch option,
+ * see http.js).
+ *
  * Used quotes (all in IRT = Toman):
  *   USDT -> free-market USD proxy
  *   BTC  -> Bitcoin

@@ -20,10 +20,22 @@ src/
 │   │   ├── index.js            # registerDateTime(bot)
 │   │   ├── view.js             # message formatting
 │   │   └── date.js             # date/time logic (the "model")
-│   └── calculator/             # inline mode: type @botname 2+2 in any chat
-│       ├── index.js            # registerCalculator(bot)
-│       ├── view.js             # inline-query result articles
-│       └── calculator.js       # expression evaluation logic
+│   ├── calculator/             # inline mode: type @botname 2+2 in any chat
+│   │   ├── index.js            # registerCalculator(bot)
+│   │   ├── view.js             # inline-query result articles
+│   │   └── calculator.js       # expression evaluation logic
+│   └── market/                 # prices button: USD / gold / bitcoin
+│       ├── index.js            # registerMarket(bot)
+│       └── view.js             # message formatting (Persian)
+├── services/                   # business services used by features
+│   └── market/                 # price fetching (tgju.org + tabdeal.org)
+│       ├── index.js            # getMarketPrices(): cache + error isolation
+│       ├── http.js             # shared JSON fetch helper (Workers-safe)
+│       ├── config.js           # endpoint URLs (env-overridable)
+│       ├── tgju.js / tabdeal.js          # the two source APIs
+│       ├── usd.js / gold.js / bitcoin.js # per-price primary→fallback chains
+│       ├── validate.js         # parsing, bounds checks, Toman conversion
+│       └── cache.js            # TTL cache with stale-serving
 └── shared/                     # code used by multiple features
     ├── render.js               # renderOrEdit: reply vs. editMessageText helper
     ├── emojis.js               # custom Telegram emoji ids + helpers
@@ -70,33 +82,16 @@ Price sources, in priority order (each source is an isolated module in
 
 | Price | Primary | Fallback |
 |---|---|---|
-| USD (free market) | `moj3.ir/price` (HTML table, Toman) | `tgju.org` JSON (Rial ÷ 10) |
-| Gold 18k/24k + Emami coin | `moj3.ir/price` (HTML table, Toman) | `tgju.org` JSON (Rial ÷ 10) |
-| Bitcoin | `ramzarz.news/coins/bitcoin` (Toman) | — |
+| USD (free market) | `tgju.org` JSON (Rial ÷ 10) | `tabdeal.org` USDT/IRT |
+| Gold 18k/24k + Emami coin | `tgju.org` JSON (Rial ÷ 10) | `tabdeal.org` GOLD/IRT (no coin, 24k derived) |
+| Bitcoin | `tgju.org` (BTC in USD × USD rate) | `tabdeal.org` BTC/IRT |
 
-Endpoint overrides: `MOJ3_URL`, `TGJU_URL`, `RAMZARZ_URL` (full URLs).
+Endpoint overrides: `TGJU_URL`, `TABDEAL_URL` (full URLs).
 
-## ⚠️ Deployed on Cloudflare Workers? Read this
+Both sources are plain public JSON APIs and are **verified to work from a
+deployed Cloudflare Worker** — no proxy or Iranian IP needed.
 
-moj3.ir, tgju.org and ramzarz.news are all **hosted on Iranian servers**, and
-Iranian hosts commonly firewall foreign datacenter IP ranges — which is exactly
-where Cloudflare Workers' outbound requests come from. Result: prices work with
-`npm run dev` (Iranian IP) but every source may fail once deployed.
-
-To confirm, watch the live logs while pressing the prices button:
-
-```bash
-npx wrangler tail
-```
-
-If you see `[market] ... HTTP 403` or `fetch failed` for the source URLs, the
-sites are blocking Cloudflare's IPs — no code change can fix that. Your options:
-
-1. **Run the bot somewhere with Iranian reachability** (a small VPS running
-   `npm start` with polling instead of the Worker) — then all sources work.
-2. **Route requests through any host the sites accept** (a tiny proxy is ~10
-   lines of `fetch(target)` — the code supports `MOJ3_URL`/`TGJU_URL`/
-   `RAMZARZ_URL` overrides, so you can point them at the proxy's URL directly).
-3. Accept limited data: if moj3 + tgju are both blocked, USD/gold show ❌ too;
-   sources that do answer are shown normally.
+> ⚠️ Gotcha: the Workers runtime does not support the `cache` field on
+> `fetch()` (it throws "not implemented" for older compatibility dates).
+> Don't add fetch options blindly — the shared helper is `http.js`.
 

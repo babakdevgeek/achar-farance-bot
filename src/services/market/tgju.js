@@ -3,10 +3,11 @@ import { parsePrice, rialToToman } from "./validate.js";
 import { getEndpoint } from "./config.js";
 
 /**
- * TGJU (tgju.org) public JSON feed — reachable from outside Iran (unlike
- * Tabdeal's web API), so it works on Cloudflare Workers.
+ * TGJU (tgju.org) public JSON feed — primary market source.
  * One request contains all quotes in RIAL: USD, gold, coins, crypto.
  * A snapshot is shared between the USD/gold/bitcoin sources.
+ * Fallback: Tabdeal's web API, which is also verified to work when
+ * deployed as a Cloudflare Worker (see tabdeal.js).
  */
 export const TGJU_ITEMS = {
     usd: "price_dollar_rl", // USD free-market rate (Rial)
