@@ -63,7 +63,7 @@ npm run dev      # local long polling (needs BOT_TOKEN in .env)
 npm run deploy   # deploy to Cloudflare Workers (wrangler)
 ```
 
-## Market sources & Cloudflare Workers connectivity
+## Market sources
 
 Price sources, in priority order (each source is an isolated module in
 `src/services/market/`):
@@ -72,35 +72,31 @@ Price sources, in priority order (each source is an isolated module in
 |---|---|---|
 | USD (free market) | `moj3.ir/price` (HTML table, Toman) | `tgju.org` JSON (Rial ÷ 10) |
 | Gold 18k/24k + Emami coin | `moj3.ir/price` (HTML table, Toman) | `tgju.org` JSON (Rial ÷ 10) |
-| Bitcoin | `bitpin.ir` JSON (Toman) | — |
+| Bitcoin | `ramzarz.news/coins/bitcoin` (Toman) | — |
 
-chartix.ir was evaluated but exposes no accessible price endpoint (only a
-public symbol list); isignal.ir's gateway requires app authentication.
+Endpoint overrides: `MOJ3_URL`, `TGJU_URL`, `RAMZARZ_URL` (full URLs).
 
-When deployed to Cloudflare Workers, outbound requests leave from **Cloudflare
-datacenter IPs**, and some Iranian sites geo-block or throttle those IPs. Local
-dev (`npm run dev`) is usually unaffected.
+## ⚠️ Deployed on Cloudflare Workers? Read this
 
-If a source is unreachable from Workers, set these variables (wrangler vars /
-`.env`) to a reachable mirror, or route through a relay:
+moj3.ir, tgju.org and ramzarz.news are all **hosted on Iranian servers**, and
+Iranian hosts commonly firewall foreign datacenter IP ranges — which is exactly
+where Cloudflare Workers' outbound requests come from. Result: prices work with
+`npm run dev` (Iranian IP) but every source may fail once deployed.
 
-| Variable | Purpose |
-|---|---|
-| `MOJ3_URL` | full URL of the moj3.ir/price page |
-| `TGJU_URL` | full URL of the TGJU JSON feed |
-| `BITPIN_URL` | full URL of the Bitpin markets endpoint |
-| `MARKET_PROXY_URL` | optional relay base URL; each request becomes `<MARKET_PROXY_URL>?url=<encoded target>` |
+To confirm, watch the live logs while pressing the prices button:
 
-A minimal relay Worker (deploy it in the same account, or anywhere with
-reachable egress):
-
-```js
-export default {
-    async fetch(request) {
-        const target = new URL(request.url).searchParams.get("url");
-        if (!target || !/^https:\/\//.test(target)) return new Response("bad request", { status: 400 });
-        return fetch(target, { headers: { Accept: "application/json", "User-Agent": "Mozilla/5.0" } });
-    },
-};
+```bash
+npx wrangler tail
 ```
+
+If you see `[market] ... HTTP 403` or `fetch failed` for the source URLs, the
+sites are blocking Cloudflare's IPs — no code change can fix that. Your options:
+
+1. **Run the bot somewhere with Iranian reachability** (a small VPS running
+   `npm start` with polling instead of the Worker) — then all sources work.
+2. **Route requests through any host the sites accept** (a tiny proxy is ~10
+   lines of `fetch(target)` — the code supports `MOJ3_URL`/`TGJU_URL`/
+   `RAMZARZ_URL` overrides, so you can point them at the proxy's URL directly).
+3. Accept limited data: if moj3 + tgju are both blocked, USD/gold show ❌ too;
+   sources that do answer are shown normally.
 

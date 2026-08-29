@@ -7,7 +7,7 @@
 const DEFAULT_TIMEOUT_MS = 8_000;
 const DEFAULT_RETRIES = 1; // 1 retry after the first failure (not aggressive)
 const RETRY_DELAY_MS = 500;
-const USER_AGENT = "Mozilla/5.0 (compatible; achar-farance-bot)";
+const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36";
 
 async function fetchJsonOnce(url, timeoutMs, headers) {
     const res = await fetch(url, {
