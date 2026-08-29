@@ -13,5 +13,7 @@ export function homeKeyboard() {
         .switchInlineCurrent(`ماشین حساب ${emoji("calculator")}`)
         .row()
         .url("ارزهای دیجیتال", "https://vanila-js-crypto-dashboard.bobandcomputers.workers.dev")
-        .url("دانلود فیلم و سریال", "https://fastmovie.bobandcomputers.workers.dev/");
+        .url("دانلود فیلم و سریال", "https://fastmovie.bobandcomputers.workers.dev/")
+        .row()
+        .text("💵 قیمت لحظه‌ای بازار", "market_prices");
 }

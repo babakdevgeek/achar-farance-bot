@@ -2,6 +2,7 @@ import { Bot } from "grammy";
 import { registerHome } from "./features/home/index.js";
 import { registerDateTime } from "./features/date-time/index.js";
 import { registerCalculator } from "./features/calculator/index.js";
+import { registerMarket } from "./features/market/index.js";
 
 /**
  * Create the bot and register all features.
@@ -19,6 +20,7 @@ export function initBot(env) {
     registerHome(bot);       // /start, "home" callback
     registerDateTime(bot);   // "current_time" callback
     registerCalculator(bot); // inline queries
+    registerMarket(bot);     // /prices, "market_prices" callback
 
     return bot;
 }
