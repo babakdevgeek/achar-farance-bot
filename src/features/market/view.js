@@ -30,6 +30,7 @@ function card(icon, title, price, unit, { showTrend = true } = {}) {
 }
 
 const USD_UNIT = "تومان";
+
 const GOLD_UNIT = "تومان/گرم";
 
 const DIVIDER = "\n➖➖➖➖➖➖➖➖➖➖\n";
@@ -43,8 +44,7 @@ function goldSection(gold) {
     if (!gold.ok) return "🥇 <b>طلا:</b> ❌ دریافت نشد";
     const body =
         card("🥇", "طلای ۱۸ عیار", gold.data.gold18, GOLD_UNIT) + "\n" +
-        card("🥈", "طلای ۲۴ عیار", gold.data.gold24, GOLD_UNIT) + "\n" +
-        card("🪙", "سکه امامی", gold.data.emamiCoin, USD_UNIT);
+        card("🥈", "طلای ۲۴ عیار", gold.data.gold24, GOLD_UNIT);
     return body + (gold.stale ? `\n${STALE_WARNING}` : "");
 }
 

@@ -20,11 +20,6 @@ export function parsePrice(input) {
     return Number.isFinite(value) && value > 0 ? value : null;
 }
 
-/** Rial → Toman (1 Toman = 10 Rial). */
-export function rialToToman(rial) {
-    return rial / 10;
-}
-
 /** Check a price against sanity bounds. */
 export function isWithinBounds(toman, bounds) {
     return Number.isFinite(toman) && toman >= bounds.min && toman <= bounds.max;
