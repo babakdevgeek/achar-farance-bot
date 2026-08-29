@@ -1,8 +1,9 @@
 {
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/dev.js",
-    "start": "node src/dist.js"
+    "dev": "nodemon src/entries/dev.js",
+    "start": "node src/entries/dev.js",
+    "deploy": "wrangler deploy"
   },
   "dependencies": {
     "grammy": "^1.40.0",
@@ -11,6 +12,7 @@
   },
   "devDependencies": {
     "dotenv": "^17.4.2",
+    "nodemon": "^3.1.14",
     "wrangler": "^4.95.0"
   }
 }
