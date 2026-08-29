@@ -1,16 +1,14 @@
-import { fetchJson, fetchJsonSafe } from "./http.js";
+import { fetchJsonSafe } from "./http.js";
 import { parsePrice, isWithinBounds, PRICE_BOUNDS, tehranTime } from "./validate.js";
+import { getEndpoint } from "./config.js";
 
 /**
- * Bitcoin price in Toman from Iranian exchanges.
- * Primary:  Wallex  (api.wallex.ir, market BTCTMN, lastPrice in Toman)
- * Fallback: Bitpin  (api.bitpin.ir, market BTC/IRT, price in Toman)
- * Both are public JSON APIs; no auth required.
+ * Bitcoin price in Toman from Bitpin (market BTC/IRT, price in Toman).
+ * Public JSON API; no auth required.
+ * URL can be overridden via the BITPIN_URL env var (see config.js).
  */
-const WALLEX_URL = "https://api.wallex.ir/v1/markets";
-const BITPIN_URL = "https://api.bitpin.ir/v1/mkt/markets/";
 
-/** Normalize an exchange result into the common price shape. */
+/** Normalize the result into the common price shape. */
 function toPrice(value, source, changePct = null) {
     return {
         value,
@@ -22,21 +20,9 @@ function toPrice(value, source, changePct = null) {
     };
 }
 
-async function fromWallex() {
-    const data = await fetchJson(WALLEX_URL, { timeoutMs: 12_000 });
-    const stats = data?.result?.symbols?.BTCTMN?.stats ?? data?.result?.markets?.BTCTMN?.stats;
-    const raw = stats?.lastPrice ?? stats?.bidPrice;
-
-    const value = parsePrice(raw);
-    if (value == null) throw new Error("Wallex: missing/invalid BTCTMN lastPrice");
-    if (!isWithinBounds(value, PRICE_BOUNDS.bitcoin)) throw new Error(`Wallex: BTC out of range: ${value}`);
-
-    const changePct = typeof stats["24h_ch"] === "number" ? stats["24h_ch"] : null;
-    return toPrice(value, "wallex.ir", changePct);
-}
-
-async function fromBitpin() {
-    const data = await fetchJsonSafe(BITPIN_URL, { timeoutMs: 15_000 });
+/** Bitcoin price in Toman from Bitpin. */
+export async function fetchBitcoinPrice() {
+    const data = await fetchJsonSafe(getEndpoint("bitpinUrl"), { timeoutMs: 15_000 });
     if (!data?.results) throw new Error("Bitpin: unexpected response shape");
 
     const market = data.results.find((m) => m.currency1?.code === "BTC" && m.currency2?.code === "IRT");
@@ -48,12 +34,3 @@ async function fromBitpin() {
     return toPrice(value, "bitpin.ir", changePct);
 }
 
-/** Bitcoin price in Toman. Tries Wallex first, falls back to Bitpin. */
-export async function fetchBitcoinPrice() {
-    try {
-        return await fromWallex();
-    } catch (wallexError) {
-        console.error("[market] wallex failed:", wallexError.message);
-        return fromBitpin();
-    }
-}

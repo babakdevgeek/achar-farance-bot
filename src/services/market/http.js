@@ -50,3 +50,19 @@ export async function fetchJsonSafe(url, options) {
         return null;
     }
 }
+
+/** Fetch a raw text body (HTML pages), null on failure. */
+export async function fetchTextSafe(url, options) {
+    try {
+        const res = await fetch(url, {
+            headers: { "User-Agent": USER_AGENT, ...options?.headers },
+            signal: AbortSignal.timeout(options?.timeoutMs ?? DEFAULT_TIMEOUT_MS),
+            cache: "no-store",
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status} from ${url}`);
+        return await res.text();
+    } catch (error) {
+        console.error(`[market] request failed: ${url}:`, error.message);
+        return null;
+    }
+}
