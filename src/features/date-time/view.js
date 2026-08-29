@@ -9,7 +9,7 @@ export function dateTimeText() {
     return `
 <i><b>ساعت</b></i> ${emojiTag("watch")}:                                                     <code>${d.time}</code>
 
-<b>تاریخ و زمان فعلی</b>
+<b>امروز</b>
 
 <i><b>شاهنشاهی</b></i> ${emojiTag("cyrus")}:                                        <code>${d.imperial}</code>
 

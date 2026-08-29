@@ -8,7 +8,7 @@ export function homeText() {
 
 export function homeKeyboard() {
     return new InlineKeyboard()
-        .text(`تاریخ و زمان فعلی ${emoji("calendar")}`, "current_time")
+        .text(`امروز ${emoji("calendar")}`, "current_time")
         .row()
         .switchInlineCurrent(`ماشین حساب ${emoji("calculator")}`)
         .row()
