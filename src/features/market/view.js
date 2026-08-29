@@ -35,21 +35,30 @@ const GOLD_UNIT = "تومان/گرم";
 
 const DIVIDER = "\n➖➖➖➖➖➖➖➖➖➖\n";
 
+// TEMP DEBUG: shows why a source failed, so issues can be diagnosed from the
+// bot output itself after deployment. Remove `debugInfo` below to hide again.
+function debugInfo(result) {
+    if (!result?.detail) return "";
+    const msg = String(result.detail).slice(0, 300);
+    return `\n<pre>${msg.replace(/[<>&]/g, " ")}</pre>`;
+}
+
 function usdSection(usd) {
-    if (!usd.ok) return "💵 <b>دلار:</b> ❌ دریافت نشد";
+    if (!usd.ok) return "💵 <b>دلار:</b> ❌ دریافت نشد" + debugInfo(usd);
     return card("💵", "دلار آمریکا", usd.data, USD_UNIT) + (usd.stale ? `\n${STALE_WARNING}` : "");
 }
 
 function goldSection(gold) {
-    if (!gold.ok) return "🥇 <b>طلا:</b> ❌ دریافت نشد";
+    if (!gold.ok) return "🥇 <b>طلا:</b> ❌ دریافت نشد" + debugInfo(gold);
     const body =
         card("🥇", "طلای ۱۸ عیار", gold.data.gold18, GOLD_UNIT) + "\n" +
-        card("🥈", "طلای ۲۴ عیار", gold.data.gold24, GOLD_UNIT);
+        card("🥈", "طلای ۲۴ عیار", gold.data.gold24, GOLD_UNIT) + "\n" +
+        card("🪙", "سکه امامی", gold.data.emamiCoin, USD_UNIT);
     return body + (gold.stale ? `\n${STALE_WARNING}` : "");
 }
 
 function bitcoinSection(bitcoin) {
-    if (!bitcoin.ok) return "₿ <b>بیت‌کوین:</b> ❌ دریافت نشد";
+    if (!bitcoin.ok) return "₿ <b>بیت‌کوین:</b> ❌ دریافت نشد" + debugInfo(bitcoin);
     return card("₿", "بیت‌کوین", bitcoin.data, USD_UNIT) + (bitcoin.stale ? `\n${STALE_WARNING}` : "");
 }
 

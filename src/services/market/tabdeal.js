@@ -37,7 +37,7 @@ let memo = { at: 0, data: null };
 async function fetchDynamicInfo() {
     if (memo.data && Date.now() - memo.at < MEMO_TTL_MS) return memo.data;
 
-    const data = await fetchJson(getEndpoint("tabdealUrl"), { timeoutMs: 15_000 });
+    const data = await fetchJson(getEndpoint("tabdealUrl"), { timeoutMs: 30_000, retries: 2 });
     if (!data || typeof data !== "object" || !data.currencies) {
         throw new Error("tabdeal: unexpected dynamic-info response");
     }

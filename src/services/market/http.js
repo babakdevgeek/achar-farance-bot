@@ -10,15 +10,29 @@ const RETRY_DELAY_MS = 500;
 const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36";
 
 async function fetchJsonOnce(url, timeoutMs, headers) {
-    const res = await fetch(url, {
-        headers: { Accept: "application/json", "User-Agent": USER_AGENT, ...headers },
-        signal: AbortSignal.timeout(timeoutMs),
-        cache: "no-store",
-    });
-    if (!res.ok) {
-        throw new Error(`HTTP ${res.status} from ${url}`);
+    let res;
+    try {
+        res = await fetch(url, {
+            headers: { Accept: "application/json", "User-Agent": USER_AGENT, ...headers },
+            signal: AbortSignal.timeout(timeoutMs),
+            // NOTE: no `cache` option here — the Cloudflare Workers runtime
+            // throws "The 'cache' field on 'RequestInitializerDict' is not
+            // implemented" for it, which broke every market request. Workers
+            // don't cache cross-origin fetches by default anyway.
+        });
+    } catch (error) {
+        // Network/DNS/TLS/timeout failures: unwrap the real cause for debugging.
+        const cause = error?.cause?.message || error?.cause?.code || error?.name || "unknown";
+        throw new Error(`fetch to ${url} failed: ${cause} (timeout ${timeoutMs}ms)`);
     }
-    return res.json();
+    if (!res.ok) {
+        throw new Error(`HTTP ${res.status} ${res.statusText} from ${url}`);
+    }
+    try {
+        return await res.json();
+    } catch (error) {
+        throw new Error(`invalid JSON response from ${url}: ${error.message}`);
+    }
 }
 
 /**
@@ -57,7 +71,6 @@ export async function fetchTextSafe(url, options) {
         const res = await fetch(url, {
             headers: { "User-Agent": USER_AGENT, ...options?.headers },
             signal: AbortSignal.timeout(options?.timeoutMs ?? DEFAULT_TIMEOUT_MS),
-            cache: "no-store",
         });
         if (!res.ok) throw new Error(`HTTP ${res.status} from ${url}`);
         return await res.text();

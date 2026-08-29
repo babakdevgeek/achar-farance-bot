@@ -32,7 +32,7 @@ async function getCachedPrice(key, fetcher) {
             // Source is down right now — show the last known value, clearly flagged.
             return { ok: true, data: cached.value, stale: true };
         }
-        return { ok: false, error: "منبع در دسترس نیست" };
+        return { ok: false, error: "منبع در دسترس نیست", detail: error.message };
     }
 }
 
